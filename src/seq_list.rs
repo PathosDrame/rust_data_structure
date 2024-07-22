@@ -12,25 +12,8 @@ struct SeqList {
     cap: usize,
 }
 
-#[allow(unused)]
-fn main() -> Result<()> {
-    let mut list = SeqList::try_new(5)?;
-
-    list.is_empty();
-
-    for i in 1..=5 {
-        list.insert(i, i as i32)?;
-    }
-
-    let v = list.get_idx(3)?;
-
-    list.get(4);
-
-    list.delete(4)?;
-    Ok(())
-}
-
 impl SeqList {
+    #[allow(unused)]
     fn try_new(cap: usize) -> Result<Self> {
         if cap < 1 {
             return Err(anyhow!("new failed"));
@@ -42,6 +25,7 @@ impl SeqList {
         })
     }
 
+    #[allow(unused)]
     fn insert(&mut self, idx: usize, val: i32) -> Result<()> {
         if idx < 1 || idx > self.size + 1 {
             return Err(anyhow!("insert failed "));
@@ -66,6 +50,7 @@ impl SeqList {
         Ok(())
     }
 
+    #[allow(unused)]
     fn delete(&mut self, idx: usize) -> Result<()> {
         if idx < 1 || idx > self.size {
             return Err(anyhow!("delete failed"));
@@ -80,6 +65,7 @@ impl SeqList {
         Ok(())
     }
 
+    #[allow(unused)]
     fn get_idx(&self, val: i32) -> Result<usize> {
         for i in 0..self.size {
             if self.vec[i] == val {
@@ -89,6 +75,7 @@ impl SeqList {
         Err(anyhow!("get idx failed"))
     }
 
+    #[allow(unused)]
     fn get(&self, idx: usize) -> Result<i32> {
         if idx < 1 || idx > self.size {
             return Err(anyhow!("get val failed"));
@@ -97,6 +84,7 @@ impl SeqList {
         Ok(self.vec[idx - 1])
     }
 
+    #[allow(unused)]
     fn is_empty(&self) -> bool {
         self.size == 0
     }
