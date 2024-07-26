@@ -1,4 +1,4 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, collections::VecDeque, rc::Rc};
 
 #[allow(unused)]
 #[derive(Debug, PartialEq, Eq)]
@@ -87,6 +87,29 @@ impl Tree {
         let mut vec = Vec::new();
         Self::pos_order(self.root.clone(), &mut vec);
         vec
+    }
+
+    fn level_order_b_tree(&self) -> Vec<i32> {
+        let mut ans = Vec::new();
+        let mut que = VecDeque::new();
+        if let Some(node) = self.root.clone() {
+            que.push_back(node);
+            let len = que.len();
+            while let Some(node) = que.pop_front() {
+                ans.push(node.borrow().val);
+
+                let left = node.borrow().left.clone();
+                if let Some(left) = left {
+                    que.push_back(left);
+                }
+
+                let right = node.borrow().right.clone();
+                if let Some(right) = right {
+                    que.push_back(right);
+                }
+            }
+        }
+        ans
     }
 }
 
@@ -307,5 +330,35 @@ mod tests {
 
         let vec = tree.pos_order_recur();
         assert_eq!(vec![4, 5, 2, 6, 3, 1], vec);
+    }
+
+    #[test]
+    fn level_order_b_tree_should_work() {
+        let node1 = Rc::new(RefCell::new(Node::new(1)));
+        let node2 = Rc::new(RefCell::new(Node::new(2)));
+        let node3 = Rc::new(RefCell::new(Node::new(3)));
+        let node4 = Rc::new(RefCell::new(Node::new(4)));
+        let node5 = Rc::new(RefCell::new(Node::new(5)));
+        let node6 = Rc::new(RefCell::new(Node::new(6)));
+
+        let mut tree = Tree::new(Some(node1.clone()));
+
+        tree.insert(
+            Some(node1.clone()),
+            Some(node2.clone()),
+            Some(node3.clone()),
+        );
+
+        tree.insert(
+            Some(node2.clone()),
+            Some(node4.clone()),
+            Some(node5.clone()),
+        );
+
+        tree.insert(Some(node3.clone()), Some(node6.clone()), None);
+
+        let vec = tree.level_order_b_tree();
+
+        assert_eq!(vec![1, 2, 3, 4, 5, 6], vec);
     }
 }
