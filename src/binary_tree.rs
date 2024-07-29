@@ -75,17 +75,17 @@ impl Tree {
         vec
     }
 
-    fn pos_order(node: Option<Rc<RefCell<Node>>>, vec: &mut Vec<i32>) {
+    fn post_order(node: Option<Rc<RefCell<Node>>>, vec: &mut Vec<i32>) {
         if let Some(node) = node {
-            Self::pos_order(node.borrow().left.clone(), vec);
-            Self::pos_order(node.borrow().right.clone(), vec);
+            Self::post_order(node.borrow().left.clone(), vec);
+            Self::post_order(node.borrow().right.clone(), vec);
             vec.push(node.borrow().val);
         }
     }
 
-    fn pos_order_recur(&self) -> Vec<i32> {
+    fn post_order_recur(&self) -> Vec<i32> {
         let mut vec = Vec::new();
-        Self::pos_order(self.root.clone(), &mut vec);
+        Self::post_order(self.root.clone(), &mut vec);
         vec
     }
 
@@ -107,6 +107,46 @@ impl Tree {
                 if let Some(right) = right {
                     que.push_back(right);
                 }
+            }
+        }
+        ans
+    }
+
+    fn pre_order_no_recur(&self) -> Vec<i32> {
+        let mut ans = Vec::new();
+        if let Some(root) = self.root.clone() {
+            let mut vec = Vec::new();
+            vec.push(root.clone());
+            while let Some(node) = vec.pop() {
+                ans.push(node.borrow().val);
+                if let Some(right) = node.borrow().right.clone() {
+                    vec.push(right);
+                }
+                if let Some(left) = node.borrow().left.clone() {
+                    vec.push(left);
+                }
+            }
+        }
+        ans
+    }
+
+    fn post_order_no_recur(&self) -> Vec<i32> {
+        let mut ans = Vec::new();
+        if let Some(root) = self.root.clone() {
+            let mut s = Vec::new();
+            let mut f = Vec::new();
+            s.push(root);
+            while let Some(node) = s.pop() {
+                f.push(node.clone());
+                if let Some(left) = node.borrow().left.clone() {
+                    s.push(left);
+                }
+                if let Some(right) = node.borrow().right.clone() {
+                    s.push(right);
+                }
+            }
+            while let Some(node) = f.pop() {
+                ans.push(node.borrow().val);
             }
         }
         ans
@@ -328,7 +368,7 @@ mod tests {
 
         tree.insert(Some(node3.clone()), Some(node6.clone()), None);
 
-        let vec = tree.pos_order_recur();
+        let vec = tree.post_order_recur();
         assert_eq!(vec![4, 5, 2, 6, 3, 1], vec);
     }
 
@@ -360,5 +400,63 @@ mod tests {
         let vec = tree.level_order_b_tree();
 
         assert_eq!(vec![1, 2, 3, 4, 5, 6], vec);
+    }
+
+    #[test]
+    fn pre_order_no_recur_should_work() {
+        let node1 = Rc::new(RefCell::new(Node::new(1)));
+        let node2 = Rc::new(RefCell::new(Node::new(2)));
+        let node3 = Rc::new(RefCell::new(Node::new(3)));
+        let node4 = Rc::new(RefCell::new(Node::new(4)));
+        let node5 = Rc::new(RefCell::new(Node::new(5)));
+        let node6 = Rc::new(RefCell::new(Node::new(6)));
+
+        let mut tree = Tree::new(Some(node1.clone()));
+
+        tree.insert(
+            Some(node1.clone()),
+            Some(node2.clone()),
+            Some(node3.clone()),
+        );
+
+        tree.insert(
+            Some(node2.clone()),
+            Some(node4.clone()),
+            Some(node5.clone()),
+        );
+
+        tree.insert(Some(node3.clone()), Some(node6.clone()), None);
+
+        let vec = tree.pre_order_no_recur();
+        assert_eq!(vec![1, 2, 4, 5, 3, 6], vec);
+    }
+
+    #[test]
+    fn post_order_no_recur_should_work() {
+        let node1 = Rc::new(RefCell::new(Node::new(1)));
+        let node2 = Rc::new(RefCell::new(Node::new(2)));
+        let node3 = Rc::new(RefCell::new(Node::new(3)));
+        let node4 = Rc::new(RefCell::new(Node::new(4)));
+        let node5 = Rc::new(RefCell::new(Node::new(5)));
+        let node6 = Rc::new(RefCell::new(Node::new(6)));
+
+        let mut tree = Tree::new(Some(node1.clone()));
+
+        tree.insert(
+            Some(node1.clone()),
+            Some(node2.clone()),
+            Some(node3.clone()),
+        );
+
+        tree.insert(
+            Some(node2.clone()),
+            Some(node4.clone()),
+            Some(node5.clone()),
+        );
+
+        tree.insert(Some(node3.clone()), Some(node6.clone()), None);
+
+        let vec = tree.post_order_no_recur();
+        assert_eq!(vec![4, 5, 2, 6, 3, 1], vec);
     }
 }
