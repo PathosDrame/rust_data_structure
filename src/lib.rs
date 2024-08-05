@@ -5,4 +5,6 @@ mod binary_tree;
 mod link_list;
 mod link_queue;
 mod link_stack;
+mod quick_find_set;
+mod quick_union_set;
 mod seq_list;
