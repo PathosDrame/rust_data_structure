@@ -36,6 +36,21 @@ impl QuickUnionSet {
         None
     }
 
+    fn find_root(&mut self, p: i32) -> Option<usize> {
+        if let Some(mut p_root) = self.find_idx(p) {
+            let mut vec = Vec::new();
+            while self.parent[p_root] != p_root {
+                vec.push(p_root);
+                p_root = self.parent[p_root];
+            }
+            while let Some(idx) = vec.pop() {
+                self.parent[idx] = p_root;
+            }
+            return Some(p_root);
+        }
+        None
+    }
+
     fn is_same(&self, p: i32, q: i32) -> bool {
         let p_root = self.find_root_idx(p);
         let q_root = self.find_root_idx(q);
@@ -46,8 +61,8 @@ impl QuickUnionSet {
     }
 
     fn union(&mut self, p: i32, q: i32) {
-        let p_root = self.find_root_idx(p);
-        let q_root = self.find_root_idx(q);
+        let p_root = self.find_root(p);
+        let q_root = self.find_root(q);
         if let (Some(p_root), Some(q_root)) = (p_root, q_root) {
             if p_root != q_root {
                 let ps = self.size[p_root];
