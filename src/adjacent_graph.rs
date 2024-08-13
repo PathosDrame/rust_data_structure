@@ -1,37 +1,41 @@
-#[derive(Debug, Default, PartialEq, Eq)]
+use std::collections::VecDeque;
+
+#[derive(Debug, Default, PartialEq, Eq, Clone)]
 struct ArcEdge {
     no: i32,
     weight: i32,
     next: Option<Box<ArcEdge>>,
 }
 
-#[derive(Debug, Default, PartialEq, Eq)]
+#[derive(Debug, Default, PartialEq, Eq, Clone)]
 struct Node {
     no: i32,
     show: String,
     first: Option<Box<ArcEdge>>,
 }
 
-#[derive(Debug, Default, PartialEq, Eq)]
+#[derive(Debug, Default, PartialEq, Eq, Clone)]
 struct AGraph {
     node_num: i32,
     edge_num: i32,
     directed: bool,
+    visited: Vec<i32>,
     nodes: Vec<Option<Box<Node>>>,
 }
 
 #[allow(unused)]
 impl AGraph {
     fn new(shows: Vec<String>, directed: bool) -> Self {
-        let node_num = shows.len() as i32;
+        let node_num = shows.len();
         let mut nodes = Vec::new();
         for (no, show) in shows.into_iter().enumerate() {
             nodes.push(Some(Box::new(Node::new(no as i32, show))));
         }
         Self {
-            node_num,
+            node_num: node_num as i32,
             edge_num: 0,
             directed,
+            visited: vec![0; node_num],
             nodes,
         }
     }
@@ -60,6 +64,63 @@ impl AGraph {
                 self.edge_num += 1;
             }
         }
+    }
+
+    fn dfs(&mut self, v: i32) -> Vec<String> {
+        self.clear();
+        let mut ans = Vec::new();
+        if v < 0 || v > self.node_num {
+            return ans;
+        }
+        self.dfs_travel(v as usize, &mut ans);
+        ans
+    }
+
+    fn clear(&mut self) {
+        for i in 0..self.node_num {
+            self.visited[i as usize] = 0;
+        }
+    }
+
+    fn dfs_travel(&mut self, v: usize, ans: &mut Vec<String>) {
+        let mut p = None;
+        self.visited[v] = 1;
+        if let Some(n) = &self.nodes[v] {
+            ans.push(n.show.clone());
+            p.clone_from(&n.first);
+            while let Some(t) = p {
+                if self.visited[t.no as usize] == 0 {
+                    self.dfs_travel(t.no as usize, ans);
+                }
+                p = t.next;
+            }
+        }
+    }
+
+    fn bfs(&mut self, v: i32) -> Vec<String> {
+        let mut ans = Vec::new();
+        if v < 0 || v > self.node_num {
+            return ans;
+        }
+        self.clear();
+        let mut q = VecDeque::new();
+        let mut p = None;
+        q.push_back(v);
+        self.visited[v as usize] = 1;
+        while let Some(v) = q.pop_front() {
+            if let Some(n) = &self.nodes[v as usize] {
+                ans.push(n.show.clone());
+                p.clone_from(&n.first);
+                while let Some(t) = p {
+                    if self.visited[t.no as usize] == 0 {
+                        q.push_back(t.no);
+                        self.visited[t.no as usize] = 1;
+                    }
+                    p = t.next;
+                }
+            }
+        }
+        ans
     }
 }
 
@@ -109,6 +170,7 @@ mod tests {
                 node_num: 5,
                 edge_num: 7,
                 directed: false,
+                visited: vec![0; 5],
                 nodes: vec![
                     Some(Box::new(Node {
                         no: 0,
@@ -167,5 +229,63 @@ mod tests {
             },
             g
         );
+    }
+
+    #[test]
+    fn dfs_should_work() {
+        let shows = vec![
+            "A".to_string(),
+            "B".to_string(),
+            "C".to_string(),
+            "D".to_string(),
+            "E".to_string(),
+        ];
+        let mut g = AGraph::new(shows, false);
+        g.add(0, 4, 1);
+        g.add(0, 3, 1);
+        g.add(0, 1, 1);
+        g.add(1, 4, 1);
+        g.add(2, 0, 1);
+        g.add(3, 4, 1);
+        g.add(3, 2, 1);
+
+        let vec = vec![
+            "A".to_string(),
+            "B".to_string(),
+            "E".to_string(),
+            "D".to_string(),
+            "C".to_string(),
+        ];
+        let ans = g.dfs(0);
+        assert_eq!(vec, ans);
+    }
+
+    #[test]
+    fn bfs_should_work() {
+        let shows = vec![
+            "A".to_string(),
+            "B".to_string(),
+            "C".to_string(),
+            "D".to_string(),
+            "E".to_string(),
+        ];
+        let mut g = AGraph::new(shows, false);
+        g.add(0, 4, 1);
+        g.add(0, 3, 1);
+        g.add(0, 1, 1);
+        g.add(1, 4, 1);
+        g.add(2, 0, 1);
+        g.add(3, 4, 1);
+        g.add(3, 2, 1);
+
+        let vec = vec![
+            "A".to_string(),
+            "B".to_string(),
+            "D".to_string(),
+            "E".to_string(),
+            "C".to_string(),
+        ];
+        let ans = g.bfs(0);
+        assert_eq!(vec, ans);
     }
 }
