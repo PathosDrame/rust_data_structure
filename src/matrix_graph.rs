@@ -2,24 +2,24 @@ use std::collections::VecDeque;
 
 #[allow(unused)]
 #[derive(Debug, PartialEq, Eq)]
-struct MatrixVertex {
-    no: i32,
-    show: String,
+pub struct MatrixVertex {
+    pub no: i32,
+    pub show: String,
 }
 
 #[allow(unused)]
 #[derive(Debug, PartialEq, Eq)]
-struct MGraph {
-    vec: Vec<MatrixVertex>,
-    node_num: usize,
-    edges: Vec<Vec<i32>>,
-    edge_num: usize,
-    directed: bool,
+pub struct MGraph {
+    pub vec: Vec<MatrixVertex>,
+    pub node_num: usize,
+    pub edges: Vec<Vec<i32>>,
+    pub edge_num: usize,
+    pub directed: bool,
 }
 
 #[allow(unused)]
 impl MGraph {
-    fn new(show: Vec<String>, directed: bool) -> Self {
+    pub fn new(show: Vec<String>, directed: bool) -> Self {
         let mut vec = Vec::new();
         let node_num = show.len();
         for (no, show) in show.into_iter().enumerate() {
@@ -35,7 +35,7 @@ impl MGraph {
         }
     }
 
-    fn add(&mut self, x: usize, y: usize, w: i32) {
+    pub fn add(&mut self, x: usize, y: usize, w: i32) {
         if x > self.node_num || y > self.node_num {
             return;
         }
@@ -48,7 +48,7 @@ impl MGraph {
         }
     }
 
-    fn dfs(&self, v: usize) -> Vec<String> {
+    pub fn dfs(&self, v: usize) -> Vec<String> {
         if v > self.node_num {
             return Vec::new();
         }
@@ -58,7 +58,7 @@ impl MGraph {
         ans
     }
 
-    fn dfs_travel(&self, v: usize, ans: &mut Vec<String>, visited: &mut Vec<i32>) {
+    pub fn dfs_travel(&self, v: usize, ans: &mut Vec<String>, visited: &mut Vec<i32>) {
         ans.push(self.vec[v].show.clone());
         visited[v] = 1;
         for i in 0..self.node_num {
@@ -69,7 +69,7 @@ impl MGraph {
         }
     }
 
-    fn bfs(&self, v: usize) -> Vec<String> {
+    pub fn bfs(&self, v: usize) -> Vec<String> {
         if v > self.node_num {
             return Vec::new();
         }
@@ -93,7 +93,7 @@ impl MGraph {
 }
 
 impl MatrixVertex {
-    fn new(no: i32, show: String) -> Self {
+    pub fn new(no: i32, show: String) -> Self {
         Self { no, show }
     }
 }
