@@ -88,7 +88,7 @@ mod tests {
             "G".to_string(),
         ];
 
-        let mut g = MGraph::new(show, false);
+        let mut g = MGraph::new(show, false, 0);
         g.add(0, 1, 12);
         g.add(0, 6, 14);
         g.add(0, 5, 16);

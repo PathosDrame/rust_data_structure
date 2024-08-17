@@ -19,13 +19,13 @@ pub struct MGraph {
 
 #[allow(unused)]
 impl MGraph {
-    pub fn new(show: Vec<String>, directed: bool) -> Self {
+    pub fn new(show: Vec<String>, directed: bool, val: i32) -> Self {
         let mut vec = Vec::new();
         let node_num = show.len();
         for (no, show) in show.into_iter().enumerate() {
             vec.push(MatrixVertex::new(no as i32, show));
         }
-        let edges = vec![vec![0; node_num]; node_num];
+        let edges = vec![vec![val; node_num]; node_num];
         Self {
             vec,
             node_num,
@@ -114,7 +114,7 @@ mod tests {
             "V7".to_string(),
             "V8".to_string(),
         ];
-        let mut g = MGraph::new(show, false);
+        let mut g = MGraph::new(show, false, 0);
         g.add(0, 1, 1);
         g.add(0, 2, 1);
         g.add(1, 3, 1);
@@ -191,7 +191,7 @@ mod tests {
             "V7".to_string(),
             "V8".to_string(),
         ];
-        let mut g = MGraph::new(show, false);
+        let mut g = MGraph::new(show, false, 0);
         g.add(0, 1, 1);
         g.add(0, 2, 1);
         g.add(1, 3, 1);
@@ -230,7 +230,7 @@ mod tests {
             "V7".to_string(),
             "V8".to_string(),
         ];
-        let mut g = MGraph::new(show, false);
+        let mut g = MGraph::new(show, false, 0);
         g.add(0, 1, 1);
         g.add(0, 2, 1);
         g.add(1, 3, 1);
