@@ -8,7 +8,7 @@ pub struct MatrixVertex {
 }
 
 #[allow(unused)]
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Default)]
 pub struct MGraph {
     pub vec: Vec<MatrixVertex>,
     pub node_num: usize,
