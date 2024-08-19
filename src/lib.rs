@@ -14,5 +14,7 @@ mod prim;
 mod quick_find_set;
 mod quick_union_set;
 mod seq_list;
+mod topological_sort;
 
+pub use adjacent_graph::*;
 pub use matrix_graph::*;

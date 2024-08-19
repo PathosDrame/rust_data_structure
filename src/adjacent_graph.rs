@@ -1,38 +1,38 @@
 use std::collections::VecDeque;
 
 #[derive(Debug, Default, PartialEq, Eq, Clone)]
-struct ArcEdge {
-    no: i32,
-    weight: i32,
-    next: Option<Box<ArcEdge>>,
+pub struct ArcEdge {
+    pub no: i32,
+    pub weight: i32,
+    pub next: Option<Box<ArcEdge>>,
 }
 
 #[derive(Debug, Default, PartialEq, Eq, Clone)]
-struct Node {
-    no: i32,
-    show: String,
-    first: Option<Box<ArcEdge>>,
+pub struct Node {
+    pub no: i32,
+    pub show: String,
+    pub first: Option<Box<ArcEdge>>,
 }
 
 #[derive(Debug, Default, PartialEq, Eq, Clone)]
-struct AGraph {
-    node_num: i32,
-    edge_num: i32,
-    directed: bool,
-    visited: Vec<i32>,
-    nodes: Vec<Option<Box<Node>>>,
+pub struct AGraph {
+    pub node_num: usize,
+    pub edge_num: i32,
+    pub directed: bool,
+    pub visited: Vec<i32>,
+    pub nodes: Vec<Option<Box<Node>>>,
 }
 
 #[allow(unused)]
 impl AGraph {
-    fn new(shows: Vec<String>, directed: bool) -> Self {
+    pub fn new(shows: Vec<String>, directed: bool) -> Self {
         let node_num = shows.len();
         let mut nodes = Vec::new();
         for (no, show) in shows.into_iter().enumerate() {
             nodes.push(Some(Box::new(Node::new(no as i32, show))));
         }
         Self {
-            node_num: node_num as i32,
+            node_num,
             edge_num: 0,
             directed,
             visited: vec![0; node_num],
@@ -40,8 +40,8 @@ impl AGraph {
         }
     }
 
-    fn add(&mut self, x: i32, y: i32, w: i32) {
-        if x < 0 || x > self.node_num || y < 0 || y > self.node_num || x == y {
+    pub fn add(&mut self, x: i32, y: i32, w: i32) {
+        if x < 0 || x > self.node_num as i32 || y < 0 || y > self.node_num as i32 || x == y {
             return;
         }
         let mut node = ArcEdge::new(y, w);
@@ -69,7 +69,7 @@ impl AGraph {
     fn dfs(&mut self, v: i32) -> Vec<String> {
         self.clear();
         let mut ans = Vec::new();
-        if v < 0 || v > self.node_num {
+        if v < 0 || v > self.node_num as i32 {
             return ans;
         }
         self.dfs_travel(v as usize, &mut ans);
@@ -78,7 +78,7 @@ impl AGraph {
 
     fn clear(&mut self) {
         for i in 0..self.node_num {
-            self.visited[i as usize] = 0;
+            self.visited[i] = 0;
         }
     }
 
@@ -99,7 +99,7 @@ impl AGraph {
 
     fn bfs(&mut self, v: i32) -> Vec<String> {
         let mut ans = Vec::new();
-        if v < 0 || v > self.node_num {
+        if v < 0 || v > self.node_num as i32 {
             return ans;
         }
         self.clear();
@@ -125,7 +125,7 @@ impl AGraph {
 }
 
 impl ArcEdge {
-    fn new(no: i32, weight: i32) -> Self {
+    pub fn new(no: i32, weight: i32) -> Self {
         Self {
             no,
             weight,
@@ -135,7 +135,7 @@ impl ArcEdge {
 }
 
 impl Node {
-    fn new(no: i32, show: String) -> Self {
+    pub fn new(no: i32, show: String) -> Self {
         Self {
             no,
             show,
