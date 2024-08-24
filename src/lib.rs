@@ -3,6 +3,7 @@ mod array_queue;
 mod array_stack;
 mod binary_search_tree;
 mod binary_tree;
+mod bubble_sort;
 mod dijkstra_short_path;
 mod huffmantree;
 mod insert_sort;
