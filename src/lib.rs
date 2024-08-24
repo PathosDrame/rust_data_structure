@@ -5,6 +5,7 @@ mod binary_search_tree;
 mod binary_tree;
 mod dijkstra_short_path;
 mod huffmantree;
+mod insert_sort;
 mod key_path;
 mod kruskal;
 mod link_list;
