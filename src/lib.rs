@@ -1,6 +1,7 @@
 mod adjacent_graph;
 mod array_queue;
 mod array_stack;
+mod back_pack;
 mod binary_search;
 mod binary_search_tree;
 mod binary_tree;
