@@ -6,6 +6,7 @@ mod binary_search_tree;
 mod binary_tree;
 mod bubble_sort;
 mod dijkstra_short_path;
+mod dp_base;
 mod huffmantree;
 mod insert_sort;
 mod key_path;
